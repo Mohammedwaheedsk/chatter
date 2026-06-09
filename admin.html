@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <title>Admin | DailyDoseofBCA</title>
+  <link rel="icon" href="mylogo.png" type="image/png">
+  <style>
+    :root {
+      --bg: #050505;
+      --panel: rgba(255, 255, 255, 0.08);
+      --border: rgba(255, 255, 255, 0.15);
+      --text: #f8fafc;
+      --muted: #a8b0bf;
+      --accent: #00f0ff;
+      --ok: #86efac;
+      --danger: #fb7185;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(56, 189, 248, 0.18), transparent 28rem),
+        linear-gradient(135deg, #10131a, #171b24);
+    }
+
+    .shell {
+      width: min(1320px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 30px 0 46px;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .brand {
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 6vw, 3.6rem);
+      letter-spacing: 0;
+    }
+
+    .lead {
+      margin: 0 0 24px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .admin-layout {
+      display: grid;
+      gap: 20px;
+    }
+
+    .control-grid {
+      display: grid;
+      grid-template-columns: minmax(300px, 0.8fr) minmax(0, 1.2fr);
+      gap: 20px;
+    }
+
+    .settings-grid {
+      display: grid;
+      grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.1fr);
+      gap: 18px;
+    }
+
+    .panel {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--panel);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      padding: 22px;
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.28);
+    }
+
+    .panel.compact {
+      padding: 18px;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .panel-header h2 {
+      margin: 0;
+      font-size: 1.18rem;
+    }
+
+    .panel-header p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    form {
+      display: grid;
+      gap: 14px;
+    }
+
+    label {
+      display: grid;
+      gap: 8px;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: rgba(0, 0, 0, 0.3);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 12px 13px;
+      font: inherit;
+    }
+
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .check {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text);
+    }
+
+    .check input {
+      width: 18px;
+      height: 18px;
+    }
+
+    button,
+    .link-button {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 11px 14px;
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text);
+      font-weight: 800;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    button.primary {
+      border: 0;
+      color: #071018;
+      background: linear-gradient(135deg, var(--accent), #86efac);
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .status {
+      min-height: 22px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .status.ok {
+      color: var(--ok);
+    }
+
+    .status.error {
+      color: var(--danger);
+    }
+
+    .messages {
+      display: grid;
+      gap: 12px;
+      max-height: 560px;
+      overflow: auto;
+      padding-right: 2px;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .profile-groups {
+      display: grid;
+      gap: 14px;
+    }
+
+    .profile-row {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.045);
+      padding: 12px;
+      margin-top: 10px;
+    }
+
+    .profile-row strong {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .profile-row .meta {
+      display: grid;
+      gap: 3px;
+      margin-top: 8px;
+      color: #d9dee8;
+    }
+
+    .message {
+      border: 1px solid var(--border);
+      background: rgba(0, 0, 0, 0.22);
+      border-radius: 8px;
+      padding: 14px;
+    }
+
+    .message strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .message small {
+      color: var(--muted);
+      display: block;
+      margin-bottom: 10px;
+      overflow-wrap: anywhere;
+    }
+
+    .message p {
+      margin: 0;
+      color: #d9dee8;
+      line-height: 1.55;
+      white-space: pre-wrap;
+    }
+
+    .metric-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .metric {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.22);
+      padding: 14px;
+    }
+
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .metric strong {
+      font-size: 1.7rem;
+    }
+
+    .admin-section-title {
+      margin: 22px 0 10px;
+      color: var(--text);
+      font-size: 1rem;
+    }
+
+    .detail-line {
+      display: block;
+      color: #d9dee8;
+      margin: 4px 0;
+      overflow-wrap: anywhere;
+    }
+
+    .status-badge {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 4px 9px;
+      font-size: 0.78rem;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .status-badge.active {
+      background: rgba(134, 239, 172, 0.14);
+      color: #bbf7d0;
+    }
+
+    .status-badge.inactive {
+      background: rgba(168, 176, 191, 0.14);
+      color: #cbd5e1;
+    }
+
+    .danger-button {
+      border-color: rgba(251, 113, 133, 0.45);
+      background: rgba(251, 113, 133, 0.1);
+      color: #fecdd3;
+      margin-top: 12px;
+    }
+
+    @media (max-width: 820px) {
+      nav,
+      .row,
+      .settings-grid,
+      .control-grid,
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+
+      nav {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .metric-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 520px) {
+      .metric-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="responsive.css">
+</head>
+<body>
+  <div class="shell">
+    <nav>
+      <a class="brand" href="index.html">DailyDoseofBCA Admin</a>
+      <a class="link-button" href="contact.html">Contact page</a>
+    </nav>
+
+    <h1>Admin</h1>
+    <p class="lead">Use this page only on the full-stack Node host. GitHub Pages can show the page, but it cannot run the protected API behind it.</p>
+
+    <div class="admin-layout">
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>Overview</h2>
+            <p>Live profile and chat summary.</p>
+          </div>
+          <button id="load-chat" type="button">Refresh dashboard</button>
+        </div>
+        <div class="metric-row">
+          <div class="metric">
+            <span>Total profiles</span>
+            <strong id="chat-profile-count">0</strong>
+          </div>
+          <div class="metric">
+            <span>Active users</span>
+            <strong id="chat-active-profile-count">0</strong>
+          </div>
+          <div class="metric">
+            <span>Inactive users</span>
+            <strong id="chat-inactive-profile-count">0</strong>
+          </div>
+          <div class="metric">
+            <span>24-hour messages</span>
+            <strong id="chat-message-count">0</strong>
+          </div>
+        </div>
+        <p class="status" id="chat-status" role="status"></p>
+      </section>
+
+      <div class="control-grid">
+        <section class="panel compact">
+          <div class="panel-header">
+            <div>
+              <h2>Site Settings</h2>
+              <p>Admin token and landing page.</p>
+            </div>
+          </div>
+          <form id="site-config-form">
+            <label>
+              Admin token
+              <input id="token" type="password" autocomplete="off" placeholder="ADMIN_TOKEN from your host">
+            </label>
+            <label>
+              Landing page
+              <select id="landingPage" name="landingPage">
+                <option value="bca-sem1.html">Semester 1</option>
+                <option value="bca-sem2.html">Semester 2</option>
+                <option value="bca-sem3.html">Semester 3</option>
+                <option value="bca-sem4.html">Semester 4</option>
+                <option value="bca-sem5.html">Semester 5</option>
+                <option value="bca-sem6.html">Semester 6</option>
+                <option value="about.html">About</option>
+                <option value="contact.html">Contact</option>
+              </select>
+            </label>
+            <button class="primary" type="submit">Save landing page</button>
+            <p class="status" id="site-config-status" role="status"></p>
+          </form>
+        </section>
+
+        <section class="panel compact">
+          <div class="panel-header">
+            <div>
+              <h2>Notification Banner</h2>
+              <p>Control the site-wide notification.</p>
+            </div>
+            <button id="load-notification" type="button">Load</button>
+          </div>
+          <form id="notification-form">
+            <label class="check">
+              <input id="active" name="active" type="checkbox">
+              Show notification
+            </label>
+            <label>
+              Message
+              <textarea id="message" name="message" required></textarea>
+            </label>
+            <div class="row">
+            <label>
+              Type
+              <select id="type" name="type">
+                <option value="info">Info</option>
+                <option value="success">Success</option>
+                <option value="warning">Warning</option>
+              </select>
+            </label>
+            <label>
+              Hide again after seconds
+              <input id="expireSeconds" name="expireSeconds" type="number" min="5" max="604800" value="5">
+            </label>
+            </div>
+            <label>
+              Link
+              <input id="link" name="link" placeholder="bca-sem4.html">
+            </label>
+            <label>
+              Icon
+              <input id="icon" name="icon" placeholder="Optional emoji or image path">
+            </label>
+            <button class="primary" type="submit">Save notification</button>
+            <p class="status" id="notification-status" role="status"></p>
+          </form>
+        </section>
+      </div>
+
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>Users</h2>
+            <p>Created profiles grouped by recent activity. PINs are hidden.</p>
+          </div>
+        </div>
+        <div class="profile-groups" id="chat-profiles"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>Messages</h2>
+            <p>Public chat messages from the current 24-hour window.</p>
+          </div>
+        </div>
+        <div class="messages" id="chat-messages"></div>
+      </section>
+
+      <div class="settings-grid">
+        <section class="panel">
+          <div class="panel-header">
+            <div>
+              <h2>Notifications</h2>
+              <p>Profile and PIN-help notifications for admin.</p>
+            </div>
+          </div>
+          <div class="messages" id="admin-notifications"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header">
+            <div>
+              <h2>Contact Messages</h2>
+              <p>Messages submitted from the contact page.</p>
+            </div>
+            <button id="load-messages" type="button">Load</button>
+          </div>
+          <p class="status" id="messages-status" role="status"></p>
+          <div class="messages" id="messages"></div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const tokenInput = document.getElementById("token");
+    const siteConfigForm = document.getElementById("site-config-form");
+    const notificationForm = document.getElementById("notification-form");
+    const siteConfigStatus = document.getElementById("site-config-status");
+    const notificationStatus = document.getElementById("notification-status");
+    const messagesStatus = document.getElementById("messages-status");
+    const chatStatus = document.getElementById("chat-status");
+    const messagesEl = document.getElementById("messages");
+    const chatProfilesEl = document.getElementById("chat-profiles");
+    const adminNotificationsEl = document.getElementById("admin-notifications");
+    const chatMessagesEl = document.getElementById("chat-messages");
+    const chatProfileCountEl = document.getElementById("chat-profile-count");
+    const chatActiveProfileCountEl = document.getElementById("chat-active-profile-count");
+    const chatInactiveProfileCountEl = document.getElementById("chat-inactive-profile-count");
+    const chatMessageCountEl = document.getElementById("chat-message-count");
+    let chatRefreshTimer = null;
+
+    tokenInput.value = localStorage.getItem("ddobca-admin-token") || "";
+    tokenInput.addEventListener("change", () => {
+      localStorage.setItem("ddobca-admin-token", tokenInput.value);
+    });
+
+    function setStatus(element, text, type = "") {
+      element.className = `status ${type}`;
+      element.textContent = text;
+    }
+
+    function authHeaders() {
+      return {
+        "Authorization": `Bearer ${tokenInput.value}`,
+        "Content-Type": "application/json"
+      };
+    }
+
+    async function loadNotification() {
+      setStatus(notificationStatus, "Loading...");
+      const response = await fetch("/api/notifications");
+      const config = await response.json();
+      document.getElementById("active").checked = Boolean(config.active);
+      document.getElementById("message").value = config.message || "";
+      document.getElementById("type").value = config.type || "info";
+      document.getElementById("expireSeconds").value = config.expireSeconds || 5;
+      document.getElementById("link").value = config.link || "#";
+      document.getElementById("icon").value = config.icon || "";
+      setStatus(notificationStatus, "Notification loaded.", "ok");
+    }
+
+    async function loadSiteConfig() {
+      setStatus(siteConfigStatus, "Loading...");
+      const response = await fetch("/api/site-config");
+      const config = await response.json();
+      document.getElementById("landingPage").value = config.landingPage || "bca-sem5.html";
+      setStatus(siteConfigStatus, "Landing page loaded.", "ok");
+    }
+
+    siteConfigForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      setStatus(siteConfigStatus, "Saving...");
+      localStorage.setItem("ddobca-admin-token", tokenInput.value);
+
+      try {
+        const response = await fetch("/api/site-config", {
+          method: "PUT",
+          headers: authHeaders(),
+          body: JSON.stringify({
+            landingPage: document.getElementById("landingPage").value
+          })
+        });
+        const data = await response.json();
+        if (!response.ok || !data.ok) throw new Error(data.error || "Unable to save landing page.");
+        setStatus(siteConfigStatus, "Landing page saved.", "ok");
+      } catch (error) {
+        setStatus(siteConfigStatus, error.message, "error");
+      }
+    });
+
+    notificationForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      setStatus(notificationStatus, "Saving...");
+      localStorage.setItem("ddobca-admin-token", tokenInput.value);
+
+      const payload = {
+        active: document.getElementById("active").checked,
+        message: document.getElementById("message").value,
+        type: document.getElementById("type").value,
+        expireSeconds: document.getElementById("expireSeconds").value,
+        link: document.getElementById("link").value,
+        icon: document.getElementById("icon").value
+      };
+
+      try {
+        const response = await fetch("/api/notifications", {
+          method: "PUT",
+          headers: authHeaders(),
+          body: JSON.stringify(payload)
+        });
+        const data = await response.json();
+        if (!response.ok || !data.ok) throw new Error(data.error || "Unable to save notification.");
+        setStatus(notificationStatus, "Notification saved.", "ok");
+      } catch (error) {
+        setStatus(notificationStatus, error.message, "error");
+      }
+    });
+
+    async function loadMessages() {
+      setStatus(messagesStatus, "Loading...");
+      messagesEl.innerHTML = "";
+      localStorage.setItem("ddobca-admin-token", tokenInput.value);
+
+      try {
+        const response = await fetch("/api/messages", { headers: authHeaders() });
+        const data = await response.json();
+        if (!response.ok || !data.ok) throw new Error(data.error || "Unable to load messages.");
+
+        if (!data.messages.length) {
+          messagesEl.innerHTML = "<p>No saved messages yet.</p>";
+        } else {
+          messagesEl.innerHTML = data.messages.map((item) => `
+            <article class="message">
+              <strong>${escapeHtml(item.subject || "Message")}</strong>
+              <small>${escapeHtml(item.name)} &lt;${escapeHtml(item.email)}&gt; - ${escapeHtml(item.createdAt)}</small>
+              <p>${escapeHtml(item.message)}</p>
+            </article>
+          `).join("");
+        }
+        setStatus(messagesStatus, `${data.messages.length} message(s) loaded.`, "ok");
+      } catch (error) {
+        setStatus(messagesStatus, error.message, "error");
+      }
+    }
+
+    async function loadChat() {
+      setStatus(chatStatus, "Loading 24-hour chat...");
+      chatProfilesEl.innerHTML = "";
+      adminNotificationsEl.innerHTML = "";
+      chatMessagesEl.innerHTML = "";
+      localStorage.setItem("ddobca-admin-token", tokenInput.value);
+
+      try {
+        const response = await fetch("/api/admin/chat", { headers: authHeaders() });
+        const data = await response.json();
+        if (!response.ok || !data.ok) throw new Error(data.error || "Unable to load 24-hour chat.");
+
+        chatProfileCountEl.textContent = data.profileCount;
+        chatActiveProfileCountEl.textContent = data.activeProfileCount || 0;
+        chatInactiveProfileCountEl.textContent = data.inactiveProfileCount || 0;
+        chatMessageCountEl.textContent = data.messages.length;
+
+        if (!data.profiles.length) {
+          chatProfilesEl.innerHTML = "<p>No profiles created yet.</p>";
+        } else {
+          const activeProfiles = data.profiles.filter((profile) => profile.status === "active");
+          const inactiveProfiles = data.profiles.filter((profile) => profile.status !== "active");
+          chatProfilesEl.innerHTML = `
+            <article class="message">
+              <strong>Active users</strong>
+              <small>Users who sent a message in the current 24-hour chat window.</small>
+              ${activeProfiles.length ? activeProfiles.map(profileStatusHtml).join("") : "<p>No active users right now.</p>"}
+            </article>
+            <article class="message">
+              <strong>Inactive users</strong>
+              <small>Profiles created, but no message in the current 24-hour chat window.</small>
+              ${inactiveProfiles.length ? inactiveProfiles.map(profileStatusHtml).join("") : "<p>No inactive users right now.</p>"}
+            </article>
+          `;
+
+          chatProfilesEl.querySelectorAll("[data-delete-profile]").forEach((button) => {
+            button.addEventListener("click", () => deleteChatProfile(button.dataset.deleteProfile));
+          });
+        }
+
+        if (!data.notifications.length) {
+          adminNotificationsEl.innerHTML = "<p>No admin notifications yet.</p>";
+        } else {
+          adminNotificationsEl.innerHTML = data.notifications.map((notification) => `
+            <article class="message">
+              <strong>${escapeHtml(notification.title || "Admin notification")}</strong>
+              <small>${escapeHtml(notification.createdAt)}</small>
+              <p>${escapeHtml(notification.message || "")}</p>
+              <button class="danger-button" type="button" data-delete-notification="${escapeHtml(notification.id)}">Dismiss notification</button>
+            </article>
+          `).join("");
+
+          adminNotificationsEl.querySelectorAll("[data-delete-notification]").forEach((button) => {
+            button.addEventListener("click", () => deleteAdminNotification(button.dataset.deleteNotification));
+          });
+        }
+
+        if (!data.messages.length) {
+          chatMessagesEl.innerHTML = "<p>No messages in the current 24-hour chat window.</p>";
+        } else {
+          chatMessagesEl.innerHTML = data.messages.slice().reverse().map((item) => `
+            <article class="message">
+              <strong>${escapeHtml(item.name)} (@${escapeHtml(item.username)})</strong>
+              <small>${escapeHtml(item.createdAt)}</small>
+              <p>${escapeHtml(item.message || "")}</p>
+              <button class="danger-button" type="button" data-delete-message="${escapeHtml(item.id)}">Delete message</button>
+            </article>
+          `).join("");
+
+          chatMessagesEl.querySelectorAll("[data-delete-message]").forEach((button) => {
+            button.addEventListener("click", () => deleteChatMessage(button.dataset.deleteMessage));
+          });
+        }
+
+        setStatus(chatStatus, "24-hour chat loaded.", "ok");
+      } catch (error) {
+        setStatus(chatStatus, error.message, "error");
+      }
+    }
+
+    function profileStatusHtml(profile) {
+      const status = profile.status === "active" ? "active" : "inactive";
+      return `
+        <div class="profile-row">
+          <strong><span class="status-badge ${status}">${status}</span> ${escapeHtml(profile.name || "Unnamed user")}</strong>
+          <div class="meta">
+            <span>Username: @${escapeHtml(profile.username || "")}</span>
+            <span>PIN: hidden</span>
+          </div>
+          <small>Created: ${escapeHtml(profile.createdAt)}</small>
+          <button class="danger-button" type="button" data-delete-profile="${escapeHtml(profile.id)}">Delete profile</button>
+        </div>
+      `;
+    }
+
+    async function deleteChatProfile(profileId) {
+      setStatus(chatStatus, "Deleting profile...");
+      localStorage.setItem("ddobca-admin-token", tokenInput.value);
+
+      try {
+        const response = await fetch(`/api/admin/chat/profiles/${encodeURIComponent(profileId)}`, {
+          method: "DELETE",
+          headers: authHeaders()
+        });
+        const data = await response.json();
+        if (!response.ok || !data.ok) throw new Error(data.error || "Unable to delete profile.");
+        setStatus(chatStatus, "Profile deleted.", "ok");
+        await loadChat();
+      } catch (error) {
+        setStatus(chatStatus, error.message, "error");
+      }
+    }
+
+    async function deleteAdminNotification(notificationId) {
+      setStatus(chatStatus, "Dismissing notification...");
+      localStorage.setItem("ddobca-admin-token", tokenInput.value);
+
+      try {
+        const response = await fetch(`/api/admin/notifications/${encodeURIComponent(notificationId)}`, {
+          method: "DELETE",
+          headers: authHeaders()
+        });
+        const data = await response.json();
+        if (!response.ok || !data.ok) throw new Error(data.error || "Unable to dismiss notification.");
+        setStatus(chatStatus, "Notification dismissed.", "ok");
+        await loadChat();
+      } catch (error) {
+        setStatus(chatStatus, error.message, "error");
+      }
+    }
+
+    async function deleteChatMessage(messageId) {
+      setStatus(chatStatus, "Deleting message...");
+      localStorage.setItem("ddobca-admin-token", tokenInput.value);
+
+      try {
+        const response = await fetch(`/api/admin/chat/messages/${encodeURIComponent(messageId)}`, {
+          method: "DELETE",
+          headers: authHeaders()
+        });
+        const data = await response.json();
+        if (!response.ok || !data.ok) throw new Error(data.error || "Unable to delete message.");
+        setStatus(chatStatus, "Message deleted.", "ok");
+        await loadChat();
+      } catch (error) {
+        setStatus(chatStatus, error.message, "error");
+      }
+    }
+
+    function escapeHtml(value) {
+      return String(value || "").replace(/[&<>"']/g, (character) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      })[character]);
+    }
+
+    document.getElementById("load-messages").addEventListener("click", loadMessages);
+    document.getElementById("load-notification").addEventListener("click", loadNotification);
+    document.getElementById("load-chat").addEventListener("click", loadChat);
+    loadSiteConfig().catch((error) => setStatus(siteConfigStatus, error.message, "error"));
+    loadNotification().catch((error) => setStatus(notificationStatus, error.message, "error"));
+    loadChat().catch((error) => setStatus(chatStatus, error.message, "error"));
+    chatRefreshTimer = window.setInterval(() => {
+      if (tokenInput.value) loadChat();
+    }, 10000);
+  </script>
+</body>
+</html>

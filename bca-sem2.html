@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>DailyDoseofBCA</title>
+
+  <!-- FAVICON -->
+  <link rel="icon" href="mylogo.png" type="image/png">
+  <link rel="apple-touch-icon" href="mylogo.png">
+
+  <!-- Global UI Redesign -->
+  <link rel="stylesheet" href="assets/css/global.css">
+</head>
+<body>
+
+  <!-- Interactive Background -->
+  <canvas id="interactive-canvas"></canvas>
+
+  <header>
+    <div class="brand" onclick="window.location.href='index.html'">DailyDoseofBCA</div>
+    <div class="page-subtitle">Sem-2</div>
+    <p class="subtitle-desc">Get all your notes, assignments here which are handwritten</p>
+  </header>
+
+  <!-- Main Content Slider -->
+  <div class="slider-viewport" id="viewport">
+    <div class="slider-track" id="track">
+
+
+      <!-- PAGE 1: NOTES -->
+      <div class="slide">
+        <div class="card">
+          <div class="card-header"><span class="subject">All Notes</span></div>
+          <p class="description">Access all subjects notes for Semester 2.</p>
+          <a href="2-notes.html" class="action-btn">Open Notes</a>
+        </div>
+      </div>
+
+      <!-- PAGE 2: ASSIGNMENTS -->
+      <div class="slide">
+        <div class="card">
+          <div class="card-header"><span class="subject">All Assignments</span></div>
+          <p class="description">Access all assignments for Semester 2.</p>
+          <a href="2-assignment.html" class="action-btn assign">Open Assignments</a>
+        </div>
+      </div>
+
+      <!-- PAGE 3: LAB WORK -->
+      <div class="slide">
+        <div class="card">
+          <div class="card-header"><span class="subject">All Lab Manuals</span></div>
+          <p class="description">Access all lab manuals for Semester 2.</p>
+          <a href="2-labmanual.html" class="action-btn lab">Open Lab Manuals</a>
+        </div>
+      </div>
+
+    
+    </div>
+  </div>
+
+  <!-- BOTTOM FLOATING NAV -->
+  <div class="nav-wrapper">
+    <div class="nav-center-wrap">
+      <div class="nav-container" id="nav-container">
+        <div class="nav-knob" id="nav-knob"></div>
+        <div class="nav-item active" data-index="0">Notes</div>
+        <div class="nav-item" data-index="1">Assign</div>
+        <div class="nav-item" data-index="2">Lab</div>
+      </div>
+      
+      <!-- Mini Menu Box for Semesters -->
+      <div class="sem-menu" id="sem-menu">
+        <a href="bca-sem1.html" class="sem-menu-btn">Sem 1</a>
+        <a href="bca-sem2.html" class="sem-menu-btn">Sem 2</a>
+        <a href="bca-sem3.html" class="sem-menu-btn">Sem 3</a>
+        <a href="bca-sem4.html" class="sem-menu-btn">Sem 4</a>
+        <a href="bca-sem5.html" class="sem-menu-btn">Sem 5</a>
+        <a href="bca-sem6.html" class="sem-menu-btn">Sem 6</a>
+      </div>
+    </div>
+    
+    <div class="sem-button" id="sem-btn">Sem</div>
+  </div>
+
+  <!-- Interactions Script -->
+  <script src="assets/js/interactions.js"></script>
+</body>
+</html>
